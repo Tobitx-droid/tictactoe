@@ -1,0 +1,302 @@
+"""
+Tic Tac Toe Player
+"""
+
+import math
+import copy
+
+X = 1
+O = 0
+EMPTY = 2
+
+#playerX = 0
+#playerO = 0
+#done = 0
+#winnerX = 0
+#winnerO = 0
+
+
+def initial_state():
+    """
+    Returns starting state of the board.
+    """
+    return [[EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY]]
+
+#initBoard = initial_state()
+
+
+def player(board):
+    """
+    Returns player who has the next turn on a board.
+    """
+    #Calculate the number of empty cells
+    empty_cells = sum(row.count(EMPTY) for row in board)
+
+    #Determine the initial player based on the number of empty cells
+    initial_player = X if empty_cells % 2 == 0 else 0
+
+    return initial_player
+    """
+    The idea here is that we count the elements which are EMPTY and
+    if the number of empties is equal to the total number of plays then no
+    play has been made yet and the board is in the initial state
+    """
+    #emptyCheck = []
+    #count = 0
+    #for i in board:
+    #    for j in board:
+    #        if (board[i][j] != EMPTY) :
+    #            emptyCheck.append(False)
+    #        else: 
+    #            count += 1
+    #            pass
+    #
+    #totalplays = sum(len(i) for i in board)#This is nice line of code which finds the length of each row and since each row is an array it sums each length it obtains together
+    #if count == totalplays:
+    #    return("It's player X's turn")
+    #
+    #countX,countO = 0
+    #playerX,playerO = 0
+    #for i in board:
+    #    for j in board:
+    #        if board[i][j] == X:
+    #            countX += 1
+    #            playerX += 1
+    #        elif board[i][j] == O:
+    #            countO += 1
+    #            playerO += 1
+
+    #if countX > countO:
+    #    return("It's player O's turn")    
+    #else:
+    #    return("It's player X's turn")        
+
+    
+
+
+   
+
+
+def actions(board):
+    """
+    Returns set of all possible actions (i, j) available on the board.
+    To implement this function, we would loop through the board to find EMPTY slots. 
+    The coordinates of the empty slot would be returned a list of tuples as the available moves.
+    """
+    possible_moves = []
+    for i in range(len(board)):
+        for j in range(len(board)):
+            if board[i][j] == EMPTY:
+                possible_moves.append((i,j))
+    return possible_moves
+    
+
+
+def result(board, action):
+    """
+    Returns the board that results from making move (i, j) on the board.
+
+    """
+
+    i,j = action
+    if board[i][j] != EMPTY:
+        raise Exception("Invalid action")
+    
+    current_player = player(board)
+
+    #Create a deep copy of the board to avoid modifying the original board
+    new_board = [row[:] for row in board]
+
+    new_board[i][j] = current_player
+
+    return new_board
+
+    #i = action[0]
+    #j = action[1]
+    #oldBoardState = copy.deepcopy(board)
+#
+    #if board[i][j] != EMPTY:
+    #    raise Exception("Invalid action")
+    #
+    #if playerX > playerO:
+    #    board[i][j] = X
+    #else:
+    #    board[i][j] = O
+
+    
+
+
+
+def winner(board):
+    """
+    Returns the winner of the game, if there is one.
+    """
+
+    #Check rows, columns, and diagonals for a win
+    for player in [X,0]:
+        for i in range(3):
+            if all(board[i][j] == player for j in range(3)) or \
+                all(board[j][i] == player for j in range(3)):
+                return player
+        if all(board[i][i] == player for i in range(3)) or \
+            all(board[i][2 - i] == player for i in range(3)):
+            return player
+    return None
+
+    #winX = [X,X,X]
+    #winO = [O,O,O]
+    #winnerX = 0
+    #winnerO = 0
+    #for i in board:
+    #    if board[i] == winX:
+    #        done = 1
+    #        winnerX = 1
+    #        return ("PlayerX wins!")
+    #    elif board[i] == winO:
+    #        done = 1
+    #        winnerO = 1
+    #        return ("PlayerO wins!")
+    #    
+    #if winX == [row[row] for row in board]:
+    #    done = 1
+    #    winnerX = 1
+    #    return ("PlayerX wins!")
+    #elif winO == [row[row] for row in board]:
+    #    done = 1
+    #    winnerO = 1
+    #    return ("PlayerO wins!")
+    #
+    #leftTopDiagonal = []
+    #rightTopDiagonal = []
+    #
+    #leftTopDiagonal.append(board[0][0])
+    #leftTopDiagonal.append(board[1][1])
+    #leftTopDiagonal.append(board[2][2])
+
+    #rightTopDiagonal.append(board[0][2])
+    #rightTopDiagonal.append(board[1][1])
+    #rightTopDiagonal.append(board[2][0])
+
+    #if leftTopDiagonal == winX:
+    #    done = 1
+    #    winnerX = 1
+    #    return ("PlayerX wins!")
+    #elif rightTopDiagonal == winX:
+    #    done = 1
+    #    winnerX = 1
+    #    return("PlayerX wins!")
+    #elif leftTopDiagonal == winO:
+    #    done = 1
+    #    winnerO = 1
+    #    return("PlayerO wins!")
+    #elif rightTopDiagonal == winO:
+    #    done = 1
+    #    winnerO = 1
+    #    return("PlayerO wins!")
+    
+
+def terminal(board):
+    """
+    Returns True if game is over, False otherwise.
+    """
+    return winner(board) is not None or all(board[i][j] != EMPTY for i in range(3) for j in range(3))
+
+    #if done == 1:
+    #    return True
+    #
+    #notFull = 0
+    #
+
+    #for i in board:
+    #    for j in board:
+    #        if board[i][j] == EMPTY:
+    #            notFull += 1
+    #        
+    #if notFull == 0:
+    #    return True
+
+
+def utility(board):
+    """
+    Returns 1 if X has won the game, -1 if O has won, 0 otherwise.
+    """
+
+    winner_player = winner(board)
+
+    if winner_player == X:
+        return 1
+    elif winner_player == 0:
+        return -1
+    else:
+        return 0
+    
+
+
+    #if terminal(board):
+    #    if winnerX == 1:
+    #        return 1
+    #    elif winnerO == 1:
+    #        return -1
+    #    else:
+    #        return 0
+
+
+def minimax(board):
+    """
+    Returns the optimal action for the current player on the board.
+    
+    """
+    if terminal(board):
+        return None
+    
+    current_player = player(board)
+
+    if current_player == X:
+        #Maximize for X
+        best_score = -float("inf")
+        
+        for action in actions(board):
+            result_board = result(board, action)
+            score = minimax_helper(result_board, O)
+            if score > best_score:
+                best_score = score
+                best_move = action
+        return best_move
+    else: 
+        # Minimize for O
+        best_score = float("inf")
+        best_move = None
+        for action in actions(board):
+            result_board = result(board, action)
+            score = minimax_helper(result_board, X)
+            if score < best_score:
+                best_score = score
+                best_move = action
+        return best_move
+    
+    #for action in actions(board):
+    #    move = min(max(result(board, action)))
+    #return move
+
+
+def minimax_helper(board, current_player):
+    if terminal(board):
+        return utility(board)
+
+    if current_player == X:
+        best_score = -float("inf")
+        for action in actions(board):
+            result_board = result(board, action)
+            score = minimax_helper(result_board, O)          
+            best_score = max(best_score, score)
+        return best_score
+    else:
+        best_score = float("inf")
+        for action in actions(board):
+            result_board = result(board, action)
+            score = minimax_helper(result_board, X)
+            best_score = min(best_score, score)
+        return best_score
+    
